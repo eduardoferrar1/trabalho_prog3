@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caderneta_ferrari</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <div class="header-title">
+                <h1>Caderneta de anotações</h1>
+            </div>
+
+            <div class="header-actions">
+                <button type="button" id="btnImprimir" class="btn btn-outline">
+                    Imprimir PDF
+                </button>
+                <button type="button" id="btnNovo" class="btn btn-primary">
+                    + Novo lembrete
+                </button>
+            </div>
+        </header>
+
+        <section id="formulario" class="card form-card hidden" aria-live="polite">
+            <div class="card-top">
+                <h2 id="tituloFormulario">Novo lembrete</h2>
+            </div>
+
+            <form id="formLembrete" novalidate>
+                <input type="hidden" id="lembreteId">
+
+                <div class="form-group">
+                    <label for="descricao">Descrição <span class="required">*</span></label>
+                    <input
+                        type="text"
+                        id="descricao"
+                        placeholder="Ex: Arrumar a cama"
+                        maxlength="500"
+                        required
+                    >
+                    <small id="erroDescricao" class="field-error hidden"></small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="btnCancelar" class="btn btn-secondary">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btnSalvar" class="btn btn-primary">
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="card filter-card">
+            <div class="card-top">
+                <h2>Filtros</h2>
+                <button type="button" id="btnLimparFiltros" class="btn btn-ghost">
+                    Limpar filtros
+                </button>
+            </div>
+
+            <div class="filtro-grid">
+                <div class="form-group col-span-2">
+                    <label for="filtroDescricao">Descrição</label>
+                    <input
+                        type="text"
+                        id="filtroDescricao"
+                        placeholder="Pesquisar por palavra ou trecho..."
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="tamanhoPagina">Registros por página</label>
+                    <select id="tamanhoPagina">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroDataCadastroInicial">Cadastro (De)</label>
+                    <input type="date" id="filtroDataCadastroInicial">
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroDataCadastroFinal">Cadastro (Até)</label>
+                    <input type="date" id="filtroDataCadastroFinal">
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroDataAtualizacaoInicial">Atualização (De)</label>
+                    <input type="date" id="filtroDataAtualizacaoInicial">
+                </div>
+
+                <div class="form-group">
+                    <label for="filtroDataAtualizacaoFinal">Atualização (Até)</label>
+                    <input type="date" id="filtroDataAtualizacaoFinal">
+                </div>
+
+                <div class="filtro-acoes">
+                    <button type="button" id="btnFiltrar" class="btn btn-primary btn-full">
+                        Filtrar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- LISTAGEM -->
+        <section class="card list-card">
+            <div class="table-header">
+                <div>
+                    <h2>Lembretes</h2>
+                    <small class="table-hint">Clique no título de uma coluna para ordenar</small>
+                </div>
+                <span id="totalRegistros" class="badge-count">0 registros</span>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <button type="button" class="th-sort" data-ordem="Descricao">
+                                    <span>Descrição</span>
+                                    <span class="sort-indicator" aria-hidden="true">↕</span>
+                                </button>
+                            </th>
+                            <th>
+                                <button type="button" class="th-sort" data-ordem="DataCadastro">
+                                    <span>Cadastro</span>
+                                    <span class="sort-indicator" aria-hidden="true">↓</span>
+                                </button>
+                            </th>
+                            <th>
+                                <button type="button" class="th-sort" data-ordem="DataAtualizacao">
+                                    <span>Atualização</span>
+                                    <span class="sort-indicator" aria-hidden="true">↕</span>
+                                </button>
+                            </th>
+                            <th>
+                                <button type="button" class="th-sort" data-ordem="IsAtivo">
+                                    <span>Status</span>
+                                    <span class="sort-indicator" aria-hidden="true">↕</span>
+                                </button>
+                            </th>
+                            <th class="th-acoes">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="listaLembretes"></tbody>
+                </table>
+
+                <div id="mensagemVazia" class="empty hidden">
+                    Nenhum lembrete encontrado.
+                </div>
+            </div>
+
+            <!-- PAGINAÇÃO -->
+            <div class="pagination">
+                <button type="button" id="btnAnterior" class="btn btn-secondary">
+                    ← Anterior
+                </button>
+                <span id="paginaAtual" class="pagination-info">Página 1</span>
+                <button type="button" id="btnProximo" class="btn btn-secondary">
+                    Próxima →
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

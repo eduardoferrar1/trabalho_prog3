@@ -1,0 +1,6 @@
+@caderneta_ferrari.minimalapi._2026_HostAddress = http://localhost:5207
+
+GET {{caderneta_ferrari.minimalapi._2026_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
